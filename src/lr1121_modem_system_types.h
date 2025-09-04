@@ -215,7 +215,7 @@ typedef enum
 /**
  * @brief Low-frequency clock modes
  */
-typedef enum
+typedef enum lr1121_modem_system_lfclk_cfg_e
 {
     LR1121_MODEM_SYSTEM_LFCLK_RC   = 0x00,  //!<  (Default)
     LR1121_MODEM_SYSTEM_LFCLK_XTAL = 0x01,
@@ -331,7 +331,8 @@ typedef struct lr1121_modem_system_version_s
  */
 typedef struct lr1121_modem_system_sleep_cfg_s
 {
-    bool is_warm_start;  //!< Keep configuration and state in retention memory, allowing warm start
+    bool is_warm_start;   //!< Keep configuration and state in retention memory, allowing warm start
+    bool is_rtc_timeout;  //!< Enable automatic wake-up after a configurable duration
 } lr1121_modem_system_sleep_cfg_t;
 
 /*

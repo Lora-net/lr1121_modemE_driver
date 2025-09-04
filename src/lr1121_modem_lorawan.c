@@ -601,7 +601,7 @@ lr1121_modem_response_code_t lr1121_modem_get_lost_connection_counter( const voi
 
     if( rc == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        *lost_connection_counter   = ( ( uint16_t ) rbuffer[0] << 8 ) + ( ( uint16_t ) rbuffer[1] );
+        *lost_connection_counter   = ( uint16_t ) ( ( rbuffer[0] << 8u ) + ( rbuffer[1] ) );
         *lost_connection_since_sec = lr1121_uint8_to_uint32( rbuffer + 2 );
     }
 
@@ -677,7 +677,7 @@ lr1121_modem_response_code_t lr1121_modem_get_duty_cycle_status( const void* con
 
     if( rc == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        *duty_cycle = lr1121_uint8_to_uint32( rbuffer );
+        *duty_cycle = ( int32_t ) lr1121_uint8_to_uint32( rbuffer );
     }
 
     return rc;
@@ -698,7 +698,7 @@ lr1121_modem_response_code_t lr1121_modem_get_available_data_rate( const void* c
 
     if( rc == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        *available_data_rate = ( ( uint16_t ) rbuffer[0] << 8 ) + rbuffer[1];
+        *available_data_rate = ( uint16_t ) ( ( rbuffer[0] << 8u ) + rbuffer[1] );
     }
 
     return rc;
@@ -876,7 +876,7 @@ lr1121_modem_response_code_t lr1121_modem_get_lbt_params( const void* context, u
     {
         *duration = lr1121_uint8_to_uint32( rbuffer );
 
-        *threshold = ( ( uint32_t ) rbuffer[4] << 8 ) + ( ( uint32_t ) rbuffer[5] );
+        *threshold = ( int16_t ) ( ( rbuffer[4] << 8u ) + ( rbuffer[5] ) );
 
         *bandwidth = lr1121_uint8_to_uint32( rbuffer + 6 );
     }
@@ -1091,10 +1091,10 @@ lr1121_modem_response_code_t lr1121_modem_set_multicast_group_config( const void
 
     cbuffer[3] = mc_group_id;
 
-    cbuffer[4] = mc_group_address >> 24;
-    cbuffer[5] = mc_group_address >> 16;
-    cbuffer[6] = mc_group_address >> 8;
-    cbuffer[7] = mc_group_address;
+    cbuffer[4] = ( uint8_t )( mc_group_address >> 24 );
+    cbuffer[5] = ( uint8_t )( mc_group_address >> 16 );
+    cbuffer[6] = ( uint8_t )( mc_group_address >> 8 );
+    cbuffer[7] = ( uint8_t ) mc_group_address;
 
     for( uint8_t i = 0; i < LR1121_MODEM_NWKSKEY_LENGTH; i++ )
     {
@@ -1120,10 +1120,10 @@ lr1121_modem_response_code_t lr1121_modem_start_session_multicast_class_c( const
         ( uint8_t ) LR1121_MODEM_GROUP_ID_LORAWAN,
         LR1121_MODEM_START_SESSION_MULTICAST_CLASS_C_CMD,
         mc_group_id,
-        downlink_frequency >> 24,
-        downlink_frequency >> 16,
-        downlink_frequency >> 8,
-        downlink_frequency,
+        ( uint8_t )( downlink_frequency >> 24 ),
+        ( uint8_t )( downlink_frequency >> 16 ),
+        ( uint8_t )( downlink_frequency >> 8 ),
+        ( uint8_t ) downlink_frequency,
         downlink_data_rate,
     };
 
@@ -1193,10 +1193,10 @@ lr1121_modem_response_code_t lr1121_modem_start_session_multicast_class_b(
         ( uint8_t ) LR1121_MODEM_GROUP_ID_LORAWAN,
         LR1121_MODEM_START_SESSION_MULTICAST_CLASS_B_CMD,
         mc_group_id,
-        downlink_frequency >> 24,
-        downlink_frequency >> 16,
-        downlink_frequency >> 8,
-        downlink_frequency,
+        ( uint8_t )( downlink_frequency >> 24 ),
+        ( uint8_t )( downlink_frequency >> 16 ),
+        ( uint8_t )( downlink_frequency >> 8 ),
+        ( uint8_t ) downlink_frequency,
         downlink_data_rate,
         ping_slot,
     };

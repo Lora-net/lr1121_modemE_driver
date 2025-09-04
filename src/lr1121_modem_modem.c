@@ -55,7 +55,6 @@
 #define LR1121_MODEM_GET_VERSION_CMD_LENGTH ( 3 )
 #define LR1121_MODEM_GET_STATUS_CMD_LENGTH ( 3 )
 #define LR1121_MODEM_GET_CHARGE_CMD_LENGTH ( 3 )
-#define LR1121_MODEM_RESET_CHARGE_CMD_LENGTH ( 3 )
 #define LR1121_MODEM_GET_EVENT_CMD_LENGTH ( 3 )
 #define LR1121_MODEM_SET_SUSPEND_CMD_LENGTH ( 3 + 1 )
 #define LR1121_MODEM_GET_SUSPEND_CMD_LENGTH ( 3 )
@@ -69,7 +68,6 @@
 #define LR1121_MODEM_TEST_MODE_TST_TX_LORA_CMD_LENGTH ( 3 + 25 )
 #define LR1121_MODEM_TEST_MODE_TST_TX_FSK_CMD_LENGTH ( 3 + 15 )
 #define LR1121_MODEM_TEST_MODE_TST_TX_LR_FHSS_CMD_LENGTH ( 3 + 19 )
-#define LR1121_MODEM_TEST_MODE_TST_TX_CONT_CMD_LENGTH ( 3 + 10 )
 #define LR1121_MODEM_TEST_MODE_TST_CW_CMD_LENGTH ( 3 + 6 )
 #define LR1121_MODEM_TEST_MODE_TST_RX_LORA_CONT_CMD_LENGTH ( 3 + 8 )
 #define LR1121_MODEM_TEST_MODE_TST_RX_FSK_CONT_CMD_LENGTH ( 3 + 5 )
@@ -77,7 +75,6 @@
 #define LR1121_MODEM_TEST_MODE_TST_RSSI_SUBGHZ_CMD_LENGTH ( 3 + 11 )
 #define LR1121_MODEM_TEST_MODE_TST_RADIO_RST_CMD_LENGTH ( 3 + 1 )
 #define LR1121_MODEM_TEST_MODE_TST_EXIT_CMD_LENGTH ( 3 + 1 )
-#define LR1121_MODEM_TEST_MODE_TST_TX_SINGLE_PREAM_CMD_LENGTH ( 3 + 12 )
 #define LR1121_MODEM_TEST_MODE_READ_RSSI_CMD_LENGTH ( 3 + 1 )
 
 #define LR1121_MODEM_GET_CHARGE_RBUFFER_LENGTH ( 320 )
@@ -251,7 +248,7 @@ lr1121_modem_response_code_t lr1121_modem_get_event( const void* context, lr1121
 
     event_fields->event_type          = ( lr1121_modem_lorawan_event_type_t ) rbuffer[0];
     event_fields->missed_events_count = rbuffer[1];
-    event_fields->data                = ( ( uint16_t ) rbuffer[2] << 8 ) + ( ( uint16_t ) rbuffer[3] );
+    event_fields->data                = ( uint16_t ) ( ( rbuffer[2] << 8u ) + rbuffer[3] );
 
     return rc;
 }

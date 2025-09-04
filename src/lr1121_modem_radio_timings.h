@@ -71,6 +71,9 @@ extern "C" {
 /**
  * @brief Get the time between the last bit sent (on Tx side) and the Rx done event (on Rx side)
  *
+ * @note The result of this call is valid only for LoRa bandwidths @ref LR1121_MODEM_RADIO_LORA_BW_500, @ref
+ * LR1121_MODEM_RADIO_LORA_BW_250 and @ref LR1121_MODEM_RADIO_LORA_BW_125.
+ *
  * @param [in] mod_params Pointer to a structure holding the LoRa modulation parameters used for the computation
  *
  * @returns Delay in microsecond

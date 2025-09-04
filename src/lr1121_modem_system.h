@@ -96,34 +96,18 @@ lr1121_modem_response_code_t lr1121_modem_system_reset( const void* context );
 lr1121_modem_response_code_t lr1121_modem_system_wakeup( const void* context );
 
 /*!
- * @brief Return stat1, stat2, and irq_status
+ * @brief Return stat1, stat2, and irq_status and clear reset status stored in stat2
  *
  * @param [in] context Chip implementation context
- * @param [out] stat1      Pointer to a variable for holding stat1. Can be NULL.
- * @param [out] stat2      Pointer to a variable for holding stat2. Can be NULL.
- * @param [out] irq_status Pointer to a variable for holding irq_status. Can be NULL.
- *
- * @returns Operation status
- *
- * @remark To simplify system integration, this function does not actually execute the GetStatus command, which would
- * require bidirectional SPI communication. It obtains the stat1, stat2, and irq_status values by performing an ordinary
- * SPI read (which is required to send null/NOP bytes on the MOSI line). This is possible since the LR1121 returns these
- * values automatically whenever a read that does not directly follow a response-carrying command is performed.
- * Unlike with the GetStatus command, however, the reset status information is NOT cleared by this command. The function
- * @ref lr1121_modem_system_clear_reset_status_info may be used for this purpose when necessary.
- */
-lr1121_modem_response_code_t lr1121_modem_system_get_status( const void* context, lr1121_modem_system_stat1_t* stat1,
-                                                             lr1121_modem_system_stat2_t*    stat2,
-                                                             lr1121_modem_system_irq_mask_t* irq_status );
-
-/*!
- * @brief Clear the reset status information stored in stat2
- *
- * @param [in] context Chip implementation context
+ * @param [out] stat1      Pointer to a variable for holding stat1
+ * @param [out] stat2      Pointer to a variable for holding stat2
+ * @param [out] irq_status Pointer to a variable for holding irq_status
  *
  * @returns Operation status
  */
-lr1121_modem_response_code_t lr1121_modem_system_clear_reset_status_info( const void* context );
+lr1121_modem_response_code_t lr1121_modem_system_get_status_and_clear_reset_source(
+    const void* context, lr1121_modem_system_stat1_t* stat1, lr1121_modem_system_stat2_t* stat2,
+    lr1121_modem_system_irq_mask_t* irq_status );
 
 /*!
  * @brief Return irq_status
@@ -133,11 +117,8 @@ lr1121_modem_response_code_t lr1121_modem_system_clear_reset_status_info( const 
  *
  * @returns Operation status
  */
-static inline lr1121_modem_response_code_t lr1121_modem_system_get_irq_status(
-    const void* context, lr1121_modem_system_irq_mask_t* irq_status )
-{
-    return lr1121_modem_system_get_status( context, 0, 0, irq_status );
-}
+lr1121_modem_response_code_t lr1121_modem_system_get_irq_status( const void*                     context,
+                                                                 lr1121_modem_system_irq_mask_t* irq_status );
 
 /*!
  * @brief Return the version of the system (hardware and software)
@@ -289,8 +270,8 @@ lr1121_modem_response_code_t lr1121_modem_system_set_dio_as_rf_switch(
  * @see lr1121_modem_system_clear_irq_status
  */
 lr1121_modem_response_code_t lr1121_modem_system_set_dio_irq_params(
-    const void* context, const lr1121_modem_system_irq_mask_t irqs_to_enable_dio1,
-    const lr1121_modem_system_irq_mask_t irqs_to_enable_dio2 );
+    const void* context, lr1121_modem_system_irq_mask_t irqs_to_enable_dio1,
+    lr1121_modem_system_irq_mask_t irqs_to_enable_dio2 );
 
 /*!
  * @brief Clear requested bits in the internal pending interrupt register
@@ -401,18 +382,24 @@ lr1121_modem_response_code_t lr1121_modem_system_get_temp( const void* context, 
 /*!
  * @brief Set the device into Sleep or Deep Sleep Mode
  *
- * The \p sleep_cfg parameter defines in which sleep mode is to use.
+ * The sleep_cfg parameter defines in which sleep mode the device is put and if it wakes up after a given time on the
+ * RTC event.
  *
- * The \p sleep_time parameter sets the sleep duration in number of clock cycles:
- * \f$ sleep\_time\_ms = sleep\_time \times \frac{1}{32.768} \f$
+ * The @p sleep_time parameter is taken into account only when \ref lr1121_modem_system_sleep_cfg_s::is_rtc_timeout is
+ * @p true. It sets the sleep time in number of clock cycles: \f$ sleep\_time\_ms = sleep\_time \times \frac{1}{32.768}
+ * \f$
+ *
+ * @warning If the configuration lr1121_modem_system_sleep_cfg_s::is_rtc_timeout is set to @p false then the low
+ * frequency clock must be configured to @ref lr1121_modem_system_lfclk_cfg_e::LR1121_MODEM_SYSTEM_LFCLK_RC with @ref
+ * lr1121_modem_system_cfg_lfclk.
  *
  * @param [in] context Chip implementation context
  * @param [in] sleep_cfg Sleep mode configuration
- * @param [in] sleep_time Value of the RTC timeout (if RtcTimeout = 1)
+ * @param [in] sleep_time Value of the RTC timeout (if \ref lr1121_modem_system_sleep_cfg_s::is_rtc_timeout is @p true)
  *
  * @returns Operation status
  *
- * @see lr1121_modem_system_set_standby, lr1121_modem_system_set_fs
+ * @see lr1121_modem_system_set_standby, lr1121_modem_system_set_fs, lr1121_modem_system_cfg_lfclk
  */
 lr1121_modem_response_code_t lr1121_modem_system_set_sleep( const void*                           context,
                                                             const lr1121_modem_system_sleep_cfg_t sleep_cfg,

@@ -49,10 +49,10 @@
  * --- PRIVATE MACROS-----------------------------------------------------------
  */
 
-#define LR1121_MODEM_LR_FHSS_BUILD_FRAME_LENGTH ( 2 + 9 )
-#define LR1121_MODEM_LR_FHSS_HEADER_BITS ( 114 )
-#define LR1121_MODEM_LR_FHSS_FRAG_BITS ( 48 )
-#define LR1121_MODEM_LR_FHSS_BLOCK_PREAMBLE_BITS ( 2 )
+#define LR1121_MODEM_LR_FHSS_BUILD_FRAME_LENGTH ( 2u + 9u )
+#define LR1121_MODEM_LR_FHSS_HEADER_BITS ( 114u )
+#define LR1121_MODEM_LR_FHSS_FRAG_BITS ( 48u )
+#define LR1121_MODEM_LR_FHSS_BLOCK_PREAMBLE_BITS ( 2u )
 #define LR1121_MODEM_LR_FHSS_BLOCK_BITS ( LR1121_MODEM_LR_FHSS_FRAG_BITS + LR1121_MODEM_LR_FHSS_BLOCK_PREAMBLE_BITS )
 
 /*
@@ -132,9 +132,9 @@ uint16_t lr1121_modem_lr_fhss_get_bit_delay_in_us( const lr1121_modem_lr_fhss_pa
 {
     const uint16_t nb_bits = lr1121_modem_lr_fhss_get_nb_bits( &( params->lr_fhss_params ), payload_length );
 
-    const uint8_t nb_padding_bits = 1 + ( ( 32768 - nb_bits ) & 0x07 );
+    const unsigned int nb_padding_bits = 1u + ( ( 32768u - nb_bits ) & 0x07u );
 
-    return 1600 + nb_padding_bits * 2048;
+    return ( uint16_t ) ( 1600u + nb_padding_bits * 2048u );
 }
 
 lr1121_modem_response_code_t lr1121_modem_lr_fhss_build_frame( const void*                          context,
@@ -174,7 +174,7 @@ uint32_t lr1121_modem_lr_fhss_get_time_on_air_in_ms( const lr1121_modem_lr_fhss_
                                                      uint16_t                             payload_length )
 {
     // Multiply by 1000 / 488.28125, or equivalently 256/125, rounding up
-    return ( ( lr1121_modem_lr_fhss_get_nb_bits( &params->lr_fhss_params, payload_length ) << 8 ) + 124 ) / 125;
+    return ( ( lr1121_modem_lr_fhss_get_nb_bits( &params->lr_fhss_params, payload_length ) << 8u ) + 124u ) / 125u;
 }
 
 unsigned int lr1121_modem_lr_fhss_get_hop_sequence_count( const lr1121_modem_lr_fhss_params_t* lr_fhss_params )
@@ -195,32 +195,36 @@ unsigned int lr1121_modem_lr_fhss_get_hop_sequence_count( const lr1121_modem_lr_
 
 uint16_t lr1121_modem_lr_fhss_get_nb_bits( const lr_fhss_v1_params_t* params, uint16_t payload_length )
 {
-    uint16_t length_bits = ( payload_length + 2 ) * 8 + 6;
+    unsigned int length_bits = ( payload_length + 2u ) * 8u + 6u;
     switch( params->cr )
     {
     case LR_FHSS_V1_CR_5_6:
-        length_bits = ( ( length_bits * 6 ) + 4 ) / 5;
+        length_bits = ( ( length_bits * 6u ) + 4u ) / 5u;
         break;
 
     case LR_FHSS_V1_CR_2_3:
-        length_bits = length_bits * 3 / 2;
+        length_bits = length_bits * 3u / 2u;
         break;
 
     case LR_FHSS_V1_CR_1_2:
-        length_bits = length_bits * 2;
+        length_bits = length_bits * 2u;
         break;
 
     case LR_FHSS_V1_CR_1_3:
-        length_bits = length_bits * 3;
+        length_bits = length_bits * 3u;
         break;
+
+    default: {
+        // Empty on purpose
+    }
     }
 
-    uint16_t payload_bits    = ( length_bits / LR1121_MODEM_LR_FHSS_FRAG_BITS ) * LR1121_MODEM_LR_FHSS_BLOCK_BITS;
-    uint16_t last_block_bits = length_bits % LR1121_MODEM_LR_FHSS_FRAG_BITS;
+    unsigned int payload_bits    = ( length_bits / LR1121_MODEM_LR_FHSS_FRAG_BITS ) * LR1121_MODEM_LR_FHSS_BLOCK_BITS;
+    unsigned last_block_bits = length_bits % LR1121_MODEM_LR_FHSS_FRAG_BITS;
     if( last_block_bits > 0 )
     {
-        payload_bits += last_block_bits + 2;
+        payload_bits += last_block_bits + 2u;
     }
 
-    return LR1121_MODEM_LR_FHSS_HEADER_BITS * params->header_count + payload_bits;
+    return ( uint16_t ) ( LR1121_MODEM_LR_FHSS_HEADER_BITS * params->header_count + payload_bits );
 }

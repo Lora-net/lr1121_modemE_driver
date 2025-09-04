@@ -159,7 +159,7 @@ lr1121_status_t lr1121_bootloader_get_version( const void* context, lr1121_bootl
     {
         version->hw   = rbuffer[0];
         version->type = rbuffer[1];
-        version->fw   = ( ( uint16_t ) rbuffer[2] << 8 ) + ( uint16_t ) rbuffer[3];
+        version->fw   = ( uint16_t ) ( ( rbuffer[2] << 8u ) + rbuffer[3] );
     }
 
     return status;
@@ -199,7 +199,7 @@ lr1121_status_t lr1121_bootloader_write_flash_encrypted( const void* context, co
     }
 
     return ( lr1121_status_t ) lr1121_hal_write( context, cbuffer, LR1121_BL_WRITE_FLASH_ENCRYPTED_CMD_LENGTH, cdata,
-                                                 length_in_word * sizeof( uint32_t ) );
+                                                 ( uint16_t ) ( length_in_word * sizeof( uint32_t ) ) );
 }
 
 lr1121_status_t lr1121_bootloader_write_flash_encrypted_full( const void* context, const uint32_t offset_in_byte,

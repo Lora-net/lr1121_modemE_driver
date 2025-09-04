@@ -195,9 +195,9 @@ lr1121_modem_response_code_t lr1121_modem_radio_get_gfsk_stats( const void*     
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        stats->nb_pkt_received  = ( ( uint16_t ) rbuffer[0] << 8 ) + ( uint16_t ) rbuffer[1];
-        stats->nb_pkt_crc_error = ( ( uint16_t ) rbuffer[2] << 8 ) + ( uint16_t ) rbuffer[3];
-        stats->nb_pkt_len_error = ( ( uint16_t ) rbuffer[4] << 8 ) + ( uint16_t ) rbuffer[5];
+        stats->nb_pkt_received  = ( uint16_t ) ( ( rbuffer[0] << 8u ) + rbuffer[1] );
+        stats->nb_pkt_crc_error = ( uint16_t ) ( ( rbuffer[2] << 8u ) + rbuffer[3] );
+        stats->nb_pkt_len_error = ( uint16_t ) ( ( rbuffer[4] << 8u ) + rbuffer[5] );
     }
 
     return status;
@@ -217,10 +217,10 @@ lr1121_modem_response_code_t lr1121_modem_radio_get_lora_stats( const void*     
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        stats->nb_pkt_received     = ( ( uint16_t ) rbuffer[0] << 8 ) + ( uint16_t ) rbuffer[1];
-        stats->nb_pkt_crc_error    = ( ( uint16_t ) rbuffer[2] << 8 ) + ( uint16_t ) rbuffer[3];
-        stats->nb_pkt_header_error = ( ( uint16_t ) rbuffer[4] << 8 ) + ( uint16_t ) rbuffer[5];
-        stats->nb_pkt_falsesync    = ( ( uint16_t ) rbuffer[6] << 8 ) + ( uint16_t ) rbuffer[7];
+        stats->nb_pkt_received     = ( uint16_t ) ( ( rbuffer[0] << 8u ) + rbuffer[1] );
+        stats->nb_pkt_crc_error    = ( uint16_t ) ( ( rbuffer[2] << 8u ) + rbuffer[3] );
+        stats->nb_pkt_header_error = ( uint16_t ) ( ( rbuffer[4] << 8u ) + rbuffer[5] );
+        stats->nb_pkt_falsesync    = ( uint16_t ) ( ( rbuffer[6] << 8u ) + rbuffer[7] );
     }
 
     return status;
@@ -281,8 +281,8 @@ lr1121_modem_response_code_t lr1121_modem_radio_get_gfsk_pkt_status( const void*
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        pkt_status->rssi_sync_in_dbm = -( int8_t )( rbuffer[0] >> 1 );
-        pkt_status->rssi_avg_in_dbm  = -( int8_t )( rbuffer[1] >> 1 );
+        pkt_status->rssi_sync_in_dbm = ( int8_t ) ( -( rbuffer[0] >> 1 ) );
+        pkt_status->rssi_avg_in_dbm  = ( int8_t ) ( -( rbuffer[1] >> 1 ) );
         pkt_status->rx_len_in_bytes  = rbuffer[2];
         pkt_status->is_addr_err      = ( ( rbuffer[3] & 0x20 ) != 0 ) ? true : false;
         pkt_status->is_crc_err       = ( ( rbuffer[3] & 0x10 ) != 0 ) ? true : false;
@@ -309,9 +309,9 @@ lr1121_modem_response_code_t lr1121_modem_radio_get_lora_pkt_status( const void*
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        pkt_status->rssi_pkt_in_dbm        = -( int8_t )( rbuffer[0] >> 1 );
-        pkt_status->snr_pkt_in_db          = ( ( ( int8_t ) rbuffer[1] ) + 2 ) >> 2;
-        pkt_status->signal_rssi_pkt_in_dbm = -( int8_t )( rbuffer[2] >> 1 );
+        pkt_status->rssi_pkt_in_dbm        = ( int8_t ) ( -( rbuffer[0] >> 1 ) );
+        pkt_status->snr_pkt_in_db          = ( int8_t ) ( ( ( int8_t ) rbuffer[1] ) + 2 ) >> 2;
+        pkt_status->signal_rssi_pkt_in_dbm = ( int8_t ) ( -( rbuffer[2] >> 1 ) );
     }
 
     return status;
@@ -330,7 +330,7 @@ lr1121_modem_response_code_t lr1121_modem_radio_get_rssi_inst( const void* conte
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        *rssi_in_dbm = -( int8_t )( rssi >> 1 );
+        *rssi_in_dbm = ( int8_t ) ( -( rssi >> 1 ) );
     }
 
     return status;
@@ -807,7 +807,7 @@ lr1121_modem_response_code_t lr1121_modem_radio_set_lora_sync_timeout( const voi
         const uint8_t cbuffer[LR1121_MODEM_RADIO_SET_LORA_SYNC_TIMEOUT_CMD_LENGTH] = {
             ( uint8_t )( LR1121_MODEM_RADIO_SET_LORA_SYNC_TIMEOUT_OC >> 8 ),
             ( uint8_t )( LR1121_MODEM_RADIO_SET_LORA_SYNC_TIMEOUT_OC >> 0 ),
-            nb_symbol,
+            ( uint8_t ) nb_symbol,
         };
 
         return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write(
@@ -831,7 +831,7 @@ lr1121_modem_response_code_t lr1121_modem_radio_set_lora_sync_timeout_with_manti
     const uint8_t cbuffer[LR1121_MODEM_RADIO_SET_LORA_SYNC_TIMEOUT_EXT_CMD_LENGTH] = {
         ( uint8_t )( LR1121_MODEM_RADIO_SET_LORA_SYNC_TIMEOUT_OC >> 8 ),
         ( uint8_t )( LR1121_MODEM_RADIO_SET_LORA_SYNC_TIMEOUT_OC >> 0 ),
-        mantissa << 3 | exponent,
+        ( uint8_t )( ( mantissa << 3 ) | exponent ),
         0x01,
     };
 
@@ -1142,6 +1142,9 @@ uint32_t lr1121_modem_radio_get_lora_bw_in_hz( lr1121_modem_radio_lora_bw_t bw )
     case LR1121_MODEM_RADIO_LORA_BW_800:
         bw_in_hz = 812000UL;
         break;
+    default: {
+        // Empty on purpose
+    }
     }
 
     return bw_in_hz;
@@ -1257,11 +1260,11 @@ lr1121_modem_response_code_t lr1121_modem_radio_cfg_and_send_bluetooth_low_energ
 uint16_t lr1121_modem_radio_convert_nb_symb_to_mant_exp( const uint16_t nb_symbol, uint8_t* mant, uint8_t* exp )
 {
     uint8_t  exp_loc  = 0;
-    uint16_t mant_loc = ( nb_symbol + 1 ) >> 1;
+    uint16_t mant_loc = ( uint16_t )( nb_symbol + 1 ) >> 1;
 
     while( mant_loc > 31 )
     {
-        mant_loc = ( mant_loc + 3 ) >> 2;
+        mant_loc = ( uint16_t )( mant_loc + 3 ) >> 2;
         exp_loc++;
     }
 
@@ -1295,6 +1298,9 @@ static inline uint32_t lr1121_modem_radio_get_gfsk_crc_len_in_bytes( lr1121_mode
         return 1;
     case LR1121_MODEM_RADIO_GFSK_CRC_2_BYTES_INV:
         return 2;
+    default: {
+        // Empty on purpose
+    }
     }
 
     return 0;

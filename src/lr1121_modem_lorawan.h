@@ -249,8 +249,15 @@ lr1121_modem_response_code_t lr1121_modem_leave_network( const void* context );
  * @brief Get maximal length of next uplink payload
  *
  * This command returns the maximum application payload size possible according to the LoRaWAN regional
- * parameters for the next transmission using the current data rate, while assuming no FOpts are present and that a
- * device is not behind a repeater.
+ * parameters for the next transmission using the current data rate.
+ *
+ * It takes into account the presence of FOpts in the next payload.
+ * However, given that FOpts can be added after downlink reception, the returned value takes it into account if this
+ * function is called after reception of downlink.
+ *
+ * @note If this device is connected behind a relay, then 19 bytes are added to the payload.
+ * These 19 bytes are not taken into account by this function.
+ * Therefore it must be subtracted from the returned value.
  *
  * @param [in] context Chip implementation context
  * @param [out] tx_max_payload Maximum application payload size possible
@@ -600,7 +607,7 @@ lr1121_modem_response_code_t lr1121_modem_set_lbt_state( const void* context, co
  *
  * @param [in] context Chip implementation context
  * @param [in] duration LBT duration in ms, default value is 5 ms
- * @param [in] threshold LBT treshold in dBm, default value is -80 dBm
+ * @param [in] threshold LBT threshold in dBm, default value is -80 dBm
  * @param [in] bandwidth LBT bandwidth in Hz, default value is 200000 Hz
  *
  * @returns Operation status

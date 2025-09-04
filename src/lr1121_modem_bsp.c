@@ -48,9 +48,9 @@
 /*!
  * @brief Power config block length
  */
-#define LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH ( 5 )
+#define LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH ( 5u )
 
-#define LR1121_MODEM_TX_POWER_CONSUMPTION_SIZE_BYTE ( 5 )
+#define LR1121_MODEM_TX_POWER_CONSUMPTION_SIZE_BYTE ( 5u )
 
 #define LR1121_MODEM_GET_TX_POWER_OFFSET_CMD_LENGTH ( 3 )
 #define LR1121_MODEM_SET_TX_POWER_OFFSET_CMD_LENGTH ( 3 + 1 )
@@ -175,18 +175,20 @@ lr1121_modem_response_code_t lr1121_modem_set_output_power_config(
     for( uint8_t index_power_config = 0; index_power_config < n_output_power_configs; index_power_config++ )
     {
         const lr1121_modem_output_power_config_t local_power_config = output_power_configs[index_power_config];
-        const uint8_t local_dbuffer_index = index_power_config * LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH;
+        const unsigned int local_dbuffer_index = index_power_config * LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH;
 
         dbuffer[local_dbuffer_index]     = local_power_config.expected_power;
         dbuffer[local_dbuffer_index + 1] = local_power_config.configured_power;
         dbuffer[local_dbuffer_index + 2] =
             ( uint8_t )( ( local_power_config.pa_supply & 0x0F ) | ( local_power_config.pa_sel << 4 ) );
         dbuffer[local_dbuffer_index + 3] =
-            ( ( local_power_config.pa_duty_cycle & 0x0F ) << 4 ) | ( local_power_config.pa_hp_sel & 0x0F );
+            ( uint8_t )( ( uint8_t )( ( local_power_config.pa_duty_cycle & 0x0F ) << 4 ) |
+                         ( uint8_t )( local_power_config.pa_hp_sel & 0x0F ) );
         dbuffer[local_dbuffer_index + 4] = ( uint8_t ) local_power_config.pa_ramp_time;
     }
 
-    const uint8_t dbuffer_size = n_output_power_configs * LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH;
+    const uint16_t dbuffer_size =
+        ( uint16_t ) ( n_output_power_configs * LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH );
     return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write(
         context, cbuffer, LR1121_MODEM_SET_OUTPUT_POWER_CONFIG_CMD_LENGTH, dbuffer, dbuffer_size );
 }
@@ -208,7 +210,7 @@ lr1121_modem_response_code_t lr1121_modem_get_output_power_config(
 
     for( uint8_t i = 0; i < LR1121_MODEM_NB_OUTPUT_POWER_CONFIG_BLOCKS; i++ )
     {
-        const uint8_t local_rbuffer_index = i * LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH;
+        const unsigned int local_rbuffer_index = i * LR1121_MODEM_OUTPUT_POWER_CONFIG_BLOCK_LENGTH;
 
         output_power_config[i].expected_power   = rbuffer[local_rbuffer_index];
         output_power_config[i].configured_power = rbuffer[local_rbuffer_index + 1];
@@ -345,10 +347,11 @@ lr1121_modem_response_code_t lr1121_modem_get_tx_power_consumption_ua(
         for( uint8_t index_power = 0; index_power < LR1121_MODEM_NB_OUTPUT_POWER_CONFIG_BLOCKS; index_power++ )
         {
             lr1121_modem_tx_power_consumption_value_t* local_value = &consumption_per_power[index_power];
-            local_value->tx_power_dbm                              = rbuffer[index_power * 5];
-            local_value->consumed_power_ua =
-                ( rbuffer[index_power * 5 + 1] << 24 ) + ( rbuffer[index_power * 5 + 2] << 16 ) +
-                ( rbuffer[index_power * 5 + 3] << 8 ) + ( rbuffer[index_power * 5 + 4] << 0 );
+            local_value->tx_power_dbm                              = ( int8_t ) rbuffer[index_power * 5];
+            local_value->consumed_power_ua = ( uint32_t ) ( rbuffer[index_power * 5 + 1] << 24u ) +
+                                             ( uint32_t ) ( rbuffer[index_power * 5 + 2] << 16u ) +
+                                             ( uint32_t ) ( rbuffer[index_power * 5 + 3] << 8u ) +
+                                             ( uint32_t ) ( rbuffer[index_power * 5 + 4] << 0u );
         }
     }
     return rc;
@@ -371,9 +374,9 @@ lr1121_modem_response_code_t lr1121_modem_set_tx_power_consumption_ua(
     {
         const lr1121_modem_tx_power_consumption_value_t local_consumption_value =
             consumption_per_power[power_table_index];
-        const uint8_t local_dbuffer_index = power_table_index * LR1121_MODEM_TX_POWER_CONSUMPTION_SIZE_BYTE;
+        const unsigned int local_dbuffer_index = power_table_index * LR1121_MODEM_TX_POWER_CONSUMPTION_SIZE_BYTE;
 
-        dbuffer[local_dbuffer_index]     = local_consumption_value.tx_power_dbm;
+        dbuffer[local_dbuffer_index]     = ( uint8_t ) local_consumption_value.tx_power_dbm;
         dbuffer[local_dbuffer_index + 1] = ( uint8_t )( local_consumption_value.consumed_power_ua >> 24 );
         dbuffer[local_dbuffer_index + 2] = ( uint8_t )( local_consumption_value.consumed_power_ua >> 16 );
         dbuffer[local_dbuffer_index + 3] = ( uint8_t )( local_consumption_value.consumed_power_ua >> 8 );
@@ -381,7 +384,8 @@ lr1121_modem_response_code_t lr1121_modem_set_tx_power_consumption_ua(
     }
 
     // Number of meaningful bytes from dbuffer to transmit to the chip
-    const uint8_t dbuffer_size = n_consumption_per_power * LR1121_MODEM_TX_POWER_CONSUMPTION_SIZE_BYTE;
+    const uint16_t dbuffer_size =
+        ( uint16_t ) ( n_consumption_per_power * LR1121_MODEM_TX_POWER_CONSUMPTION_SIZE_BYTE );
 
     return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write(
         context, cbuffer, LR1121_MODEM_SET_TX_POWER_CONSUMPTION_UA_CMD_LENGTH, dbuffer, dbuffer_size );

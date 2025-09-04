@@ -218,6 +218,15 @@ static uint32_t lr1121_modem_radio_timings_get_lora_rx_input_delay_in_us( lr1121
     {
         return 57;
     }
+    case LR1121_MODEM_RADIO_LORA_BW_10:
+    case LR1121_MODEM_RADIO_LORA_BW_15:
+    case LR1121_MODEM_RADIO_LORA_BW_20:
+    case LR1121_MODEM_RADIO_LORA_BW_31:
+    case LR1121_MODEM_RADIO_LORA_BW_41:
+    case LR1121_MODEM_RADIO_LORA_BW_62:
+    case LR1121_MODEM_RADIO_LORA_BW_200:
+    case LR1121_MODEM_RADIO_LORA_BW_400:
+    case LR1121_MODEM_RADIO_LORA_BW_800:
     default:
     {
         return 0;
@@ -228,7 +237,7 @@ static uint32_t lr1121_modem_radio_timings_get_lora_rx_input_delay_in_us( lr1121
 static uint32_t lr1121_modem_radio_timings_get_lora_symb_time_in_us( const lr1121_modem_radio_lora_sf_t sf,
                                                                      const lr1121_modem_radio_lora_bw_t bw )
 {
-    return ( 1 << ( uint8_t ) sf ) * 1000000 / lr1121_modem_radio_get_lora_bw_in_hz( bw );
+    return ( 1u << ( uint8_t ) sf ) * 1000000u / lr1121_modem_radio_get_lora_bw_in_hz( bw );
 }
 
 /* --- EOF ------------------------------------------------------------------ */

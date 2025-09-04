@@ -42,7 +42,7 @@ extern "C" {
 /**
  * @brief Version of the driver
  */
-#define LR1121_MODEM_DRIVER_VERSION "v1.0.0"
+#define LR1121_MODEM_DRIVER_VERSION "v1.1.0"
 
 /**
  * @brief Returns version string

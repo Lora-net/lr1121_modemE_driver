@@ -163,7 +163,8 @@ lr1121_modem_response_code_t lr1121_modem_regmem_write_regmem32( const void* con
                                                                 address, buffer, length );
 
     return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write(
-        context, cbuffer, LR1121_MODEM_REGMEM_WRITE_REGMEM32_CMD_LENGTH, cdata, length * sizeof( uint32_t ) );
+        context, cbuffer, LR1121_MODEM_REGMEM_WRITE_REGMEM32_CMD_LENGTH, cdata,
+        ( uint16_t ) ( length * sizeof( uint32_t ) ) );
 }
 
 lr1121_modem_response_code_t lr1121_modem_regmem_read_regmem32( const void* context, const uint32_t address,
@@ -181,7 +182,7 @@ lr1121_modem_response_code_t lr1121_modem_regmem_read_regmem32( const void* cont
 
     const lr1121_modem_response_code_t status = ( lr1121_modem_response_code_t ) lr1121_modem_hal_read(
         context, cbuffer, LR1121_MODEM_REGMEM_READ_REGMEM32_CMD_LENGTH, ( uint8_t* ) buffer,
-        length * sizeof( uint32_t ) );
+        ( uint16_t ) ( length * sizeof( uint32_t ) ) );
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {

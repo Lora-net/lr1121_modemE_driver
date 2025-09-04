@@ -155,23 +155,6 @@ lr1121_modem_hal_status_t lr1121_modem_hal_write_read( const void* context, cons
                                                        const uint16_t data_length );
 
 /*!
- * @brief  Direct read from the SPI bus
- *
- * @remark Unlike @ref lr1121_modem_hal_read, this is a simple direct SPI bus SS/read/nSS operation. While reading the
- * response data, the implementation of this function must ensure that only zero bytes (NOP) are written to the SPI bus.
- *
- * @remark Only required by the @ref lr1121_modem_system_get_status command
- *
- * @param [in]  context      Radio implementation parameters
- * @param [out] data         Pointer to the buffer to be received
- * @param [in]  data_length  Buffer size to be received
- *
- * @returns Operation status
- */
-lr1121_modem_hal_status_t lr1121_modem_hal_direct_read( const void* context, uint8_t* data,
-                                                        const uint16_t data_length );
-
-/*!
  * Radio data transfer - write without wait the return code - this API is dedicated to the functions which reset the
  * Modem-E
  *

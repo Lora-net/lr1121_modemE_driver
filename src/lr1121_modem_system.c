@@ -58,6 +58,8 @@
  * --- PRIVATE CONSTANTS -------------------------------------------------------
  */
 
+#define LR1121_MODEM_SYSTEM_GET_STATUS_AND_CLEAR_RESET_STATUS_CMD_LENGTH ( 2 )
+#define LR1121_MODEM_SYSTEM_GET_IRQ_STATUS_CMD_LENGTH ( 2 )
 #define LR1121_MODEM_SYSTEM_GET_VERSION_CMD_LENGTH ( 2 )
 #define LR1121_MODEM_SYSTEM_GET_ERRORS_CMD_LENGTH ( 2 )
 #define LR1121_MODEM_SYSTEM_CLEAR_ERRORS_CMD_LENGTH ( 2 )
@@ -87,6 +89,7 @@
 #define LR1121_MODEM_SYSTEM_DRIVE_DIO_IN_SLEEP_MODE_CMD_LENGTH ( 3 )
 
 #define LR1121_MODEM_SYSTEM_GET_STATUS_DIRECT_READ_LENGTH ( 6 )
+#define LR1121_MODEM_SYSTEM_IRQ_STATUS_LENGTH ( 4 )
 
 /*
  * -----------------------------------------------------------------------------
@@ -98,33 +101,34 @@
  */
 enum
 {
-    LR1121_MODEM_SYSTEM_GET_STATUS_OC              = 0x0100,
-    LR1121_MODEM_SYSTEM_GET_VERSION_OC             = 0x0101,
-    LR1121_MODEM_SYSTEM_GET_ERRORS_OC              = 0x010D,
-    LR1121_MODEM_SYSTEM_CLEAR_ERRORS_OC            = 0x010E,
-    LR1121_MODEM_SYSTEM_CALIBRATE_OC               = 0x010F,
-    LR1121_MODEM_SYSTEM_SET_REGMODE_OC             = 0x0110,
-    LR1121_MODEM_SYSTEM_CALIBRATE_IMAGE_OC         = 0x0111,
-    LR1121_MODEM_SYSTEM_SET_DIO_AS_RF_SWITCH_OC    = 0x0112,
-    LR1121_MODEM_SYSTEM_SET_DIOIRQPARAMS_OC        = 0x0113,
-    LR1121_MODEM_SYSTEM_CLEAR_IRQ_OC               = 0x0114,
-    LR1121_MODEM_SYSTEM_CFG_LFCLK_OC               = 0x0116,
-    LR1121_MODEM_SYSTEM_SET_TCXO_MODE_OC           = 0x0117,
-    LR1121_MODEM_SYSTEM_REBOOT_OC                  = 0x0118,
-    LR1121_MODEM_SYSTEM_GET_VBAT_OC                = 0x0119,
-    LR1121_MODEM_SYSTEM_GET_TEMP_OC                = 0x011A,
-    LR1121_MODEM_SYSTEM_SET_SLEEP_OC               = 0x011B,
-    LR1121_MODEM_SYSTEM_SET_STANDBY_OC             = 0x011C,
-    LR1121_MODEM_SYSTEM_SET_FS_OC                  = 0x011D,
-    LR1121_MODEM_SYSTEM_GET_RANDOM_OC              = 0x0120,
-    LR1121_MODEM_SYSTEM_ERASE_INFOPAGE_OC          = 0x0121,
-    LR1121_MODEM_SYSTEM_WRITE_INFOPAGE_OC          = 0x0122,
-    LR1121_MODEM_SYSTEM_READ_INFOPAGE_OC           = 0x0123,
-    LR1121_MODEM_SYSTEM_READ_UID_OC                = 0x0125,
-    LR1121_MODEM_SYSTEM_READ_JOIN_EUI_OC           = 0x0126,
-    LR1121_MODEM_SYSTEM_READ_PIN_OC                = 0x0127,
-    LR1121_MODEM_SYSTEM_ENABLE_SPI_CRC_OC          = 0x0128,
-    LR1121_MODEM_SYSTEM_DRIVE_DIO_IN_SLEEP_MODE_OC = 0x012A,
+    LR1121_MODEM_SYSTEM_GET_STATUS_AND_CLEAR_RESET_OC = 0x0100,
+    LR1121_MODEM_SYSTEM_GET_VERSION_OC                = 0x0101,
+    LR1121_MODEM_SYSTEM_GET_ERRORS_OC                 = 0x010D,
+    LR1121_MODEM_SYSTEM_CLEAR_ERRORS_OC               = 0x010E,
+    LR1121_MODEM_SYSTEM_CALIBRATE_OC                  = 0x010F,
+    LR1121_MODEM_SYSTEM_SET_REGMODE_OC                = 0x0110,
+    LR1121_MODEM_SYSTEM_CALIBRATE_IMAGE_OC            = 0x0111,
+    LR1121_MODEM_SYSTEM_SET_DIO_AS_RF_SWITCH_OC       = 0x0112,
+    LR1121_MODEM_SYSTEM_SET_DIOIRQPARAMS_OC           = 0x0113,
+    LR1121_MODEM_SYSTEM_CLEAR_IRQ_OC                  = 0x0114,
+    LR1121_MODEM_SYSTEM_GET_IRQ_OC                    = 0x0115,
+    LR1121_MODEM_SYSTEM_CFG_LFCLK_OC                  = 0x0116,
+    LR1121_MODEM_SYSTEM_SET_TCXO_MODE_OC              = 0x0117,
+    LR1121_MODEM_SYSTEM_REBOOT_OC                     = 0x0118,
+    LR1121_MODEM_SYSTEM_GET_VBAT_OC                   = 0x0119,
+    LR1121_MODEM_SYSTEM_GET_TEMP_OC                   = 0x011A,
+    LR1121_MODEM_SYSTEM_SET_SLEEP_OC                  = 0x011B,
+    LR1121_MODEM_SYSTEM_SET_STANDBY_OC                = 0x011C,
+    LR1121_MODEM_SYSTEM_SET_FS_OC                     = 0x011D,
+    LR1121_MODEM_SYSTEM_GET_RANDOM_OC                 = 0x0120,
+    LR1121_MODEM_SYSTEM_ERASE_INFOPAGE_OC             = 0x0121,
+    LR1121_MODEM_SYSTEM_WRITE_INFOPAGE_OC             = 0x0122,
+    LR1121_MODEM_SYSTEM_READ_INFOPAGE_OC              = 0x0123,
+    LR1121_MODEM_SYSTEM_READ_UID_OC                   = 0x0125,
+    LR1121_MODEM_SYSTEM_READ_JOIN_EUI_OC              = 0x0126,
+    LR1121_MODEM_SYSTEM_READ_PIN_OC                   = 0x0127,
+    LR1121_MODEM_SYSTEM_ENABLE_SPI_CRC_OC             = 0x0128,
+    LR1121_MODEM_SYSTEM_DRIVE_DIO_IN_SLEEP_MODE_OC    = 0x012A,
 };
 
 /*
@@ -163,39 +167,59 @@ lr1121_modem_response_code_t lr1121_modem_system_reset( const void* context )
     return ( lr1121_modem_response_code_t ) lr1121_modem_hal_reset( context );
 }
 
-lr1121_modem_response_code_t lr1121_modem_system_get_status( const void* context, lr1121_modem_system_stat1_t* stat1,
-                                                             lr1121_modem_system_stat2_t*    stat2,
-                                                             lr1121_modem_system_irq_mask_t* irq_status )
+lr1121_modem_response_code_t lr1121_modem_system_get_status_and_clear_reset_source(
+    const void* context, lr1121_modem_system_stat1_t* stat1, lr1121_modem_system_stat2_t* stat2,
+    lr1121_modem_system_irq_mask_t* irq_status )
 {
-    uint8_t data[LR1121_MODEM_SYSTEM_GET_STATUS_DIRECT_READ_LENGTH] = { 0 };
+    const uint8_t cbuffer[LR1121_MODEM_SYSTEM_GET_STATUS_AND_CLEAR_RESET_STATUS_CMD_LENGTH] = {
+        ( uint8_t )( LR1121_MODEM_SYSTEM_GET_STATUS_AND_CLEAR_RESET_OC >> 8 ),
+        ( uint8_t )( LR1121_MODEM_SYSTEM_GET_STATUS_AND_CLEAR_RESET_OC >> 0 ),
+    };
 
-    const lr1121_modem_response_code_t status = ( lr1121_modem_response_code_t ) lr1121_modem_hal_direct_read(
-        context, data, LR1121_MODEM_SYSTEM_GET_STATUS_DIRECT_READ_LENGTH );
+    uint8_t rbuffer[LR1121_MODEM_SYSTEM_GET_STATUS_DIRECT_READ_LENGTH] = { 0 };
+
+    const lr1121_modem_response_code_t status = ( lr1121_modem_response_code_t ) lr1121_modem_hal_read(
+        context, cbuffer, LR1121_MODEM_SYSTEM_GET_STATUS_AND_CLEAR_RESET_STATUS_CMD_LENGTH, rbuffer,
+        LR1121_MODEM_SYSTEM_GET_STATUS_DIRECT_READ_LENGTH );
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        lr1121_modem_system_convert_stat1_byte_to_enum( data[0], stat1 );
-        lr1121_modem_system_convert_stat2_byte_to_enum( data[1], stat2 );
+        lr1121_modem_system_convert_stat1_byte_to_enum( rbuffer[0], stat1 );
+        lr1121_modem_system_convert_stat2_byte_to_enum( rbuffer[1], stat2 );
         if( irq_status != NULL )
         {
-            *irq_status = ( ( lr1121_modem_system_irq_mask_t ) data[2] << 24 ) +
-                          ( ( lr1121_modem_system_irq_mask_t ) data[3] << 16 ) +
-                          ( ( lr1121_modem_system_irq_mask_t ) data[4] << 8 ) +
-                          ( ( lr1121_modem_system_irq_mask_t ) data[5] << 0 );
+            *irq_status = ( ( lr1121_modem_system_irq_mask_t ) rbuffer[2] << 24 ) +
+                          ( ( lr1121_modem_system_irq_mask_t ) rbuffer[3] << 16 ) +
+                          ( ( lr1121_modem_system_irq_mask_t ) rbuffer[4] << 8 ) +
+                          ( ( lr1121_modem_system_irq_mask_t ) rbuffer[5] << 0 );
         }
     }
 
     return status;
 }
 
-lr1121_modem_response_code_t lr1121_modem_system_clear_reset_status_info( const void* context )
+lr1121_modem_response_code_t lr1121_modem_system_get_irq_status( const void*                     context,
+                                                                 lr1121_modem_system_irq_mask_t* irq_status )
 {
-    uint8_t cbuffer[2] = {
-        ( uint8_t )( LR1121_MODEM_SYSTEM_GET_STATUS_OC >> 8 ),
-        ( uint8_t )( LR1121_MODEM_SYSTEM_GET_STATUS_OC >> 0 ),
+    const uint8_t cbuffer[LR1121_MODEM_SYSTEM_GET_IRQ_STATUS_CMD_LENGTH] = {
+        ( uint8_t )( LR1121_MODEM_SYSTEM_GET_IRQ_OC >> 8 ),
+        ( uint8_t )( LR1121_MODEM_SYSTEM_GET_IRQ_OC >> 0 ),
     };
+    uint8_t rbuffer[LR1121_MODEM_SYSTEM_IRQ_STATUS_LENGTH] = { 0x00 };
 
-    return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write( context, cbuffer, sizeof( cbuffer ), 0, 0 );
+    const lr1121_modem_response_code_t status = ( lr1121_modem_response_code_t ) lr1121_modem_hal_read(
+        context, cbuffer, LR1121_MODEM_SYSTEM_GET_IRQ_STATUS_CMD_LENGTH, rbuffer,
+        LR1121_MODEM_SYSTEM_IRQ_STATUS_LENGTH );
+
+    if( status == LR1121_MODEM_RESPONSE_CODE_OK )
+    {
+        *irq_status = ( ( lr1121_modem_system_irq_mask_t ) rbuffer[0] << 24 ) +
+                      ( ( lr1121_modem_system_irq_mask_t ) rbuffer[1] << 16 ) +
+                      ( ( lr1121_modem_system_irq_mask_t ) rbuffer[2] << 8 ) +
+                      ( ( lr1121_modem_system_irq_mask_t ) rbuffer[3] << 0 );
+    }
+
+    return status;
 }
 
 lr1121_modem_response_code_t lr1121_modem_system_get_version( const void*                    context,
@@ -214,7 +238,7 @@ lr1121_modem_response_code_t lr1121_modem_system_get_version( const void*       
     {
         version->hw   = rbuffer[0];
         version->type = ( lr1121_modem_system_version_type_t ) rbuffer[1];
-        version->fw   = ( ( uint16_t ) rbuffer[2] << 8 ) + ( uint16_t ) rbuffer[3];
+        version->fw   = ( uint16_t ) ( ( rbuffer[2] << 8u ) + rbuffer[3] );
     }
 
     return status;
@@ -233,7 +257,7 @@ lr1121_modem_response_code_t lr1121_modem_system_get_errors( const void* context
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        *errors = ( ( uint16_t ) rbuffer[0] << 8 ) + ( uint16_t ) rbuffer[1];
+        *errors = ( uint16_t ) ( ( rbuffer[0] << 8u ) + rbuffer[1] );
     }
 
     return status;
@@ -294,11 +318,11 @@ lr1121_modem_response_code_t lr1121_modem_system_calibrate_image_in_mhz( const v
                                                                          const uint16_t freq2_in_mhz )
 {
     // Perform a floor() to get a value for freq1 corresponding to a frequency lower than or equal to freq1_in_mhz
-    const uint8_t freq1 = freq1_in_mhz / LR1121_MODEM_SYSTEM_IMAGE_CALIBRATION_STEP_IN_MHZ;
+    const uint8_t freq1 = ( uint8_t )( freq1_in_mhz / LR1121_MODEM_SYSTEM_IMAGE_CALIBRATION_STEP_IN_MHZ );
 
     // Perform a ceil() to get a value for freq2 corresponding to a frequency higher than or equal to freq2_in_mhz
-    const uint8_t freq2 = ( freq2_in_mhz + LR1121_MODEM_SYSTEM_IMAGE_CALIBRATION_STEP_IN_MHZ - 1 ) /
-                          LR1121_MODEM_SYSTEM_IMAGE_CALIBRATION_STEP_IN_MHZ;
+    const uint8_t freq2 = ( uint8_t )( ( freq2_in_mhz + LR1121_MODEM_SYSTEM_IMAGE_CALIBRATION_STEP_IN_MHZ - 1 ) /
+                                       LR1121_MODEM_SYSTEM_IMAGE_CALIBRATION_STEP_IN_MHZ );
 
     return lr1121_modem_system_calibrate_image( context, freq1, freq2 );
 }
@@ -324,9 +348,11 @@ lr1121_modem_response_code_t lr1121_modem_system_set_dio_as_rf_switch(
 }
 
 lr1121_modem_response_code_t lr1121_modem_system_set_dio_irq_params(
-    const void* context, const lr1121_modem_system_irq_mask_t irqs_to_enable_dio1,
-    const lr1121_modem_system_irq_mask_t irqs_to_enable_dio2 )
+    const void* context, lr1121_modem_system_irq_mask_t irqs_to_enable_dio1,
+    lr1121_modem_system_irq_mask_t irqs_to_enable_dio2 )
 {
+    // Force bit 28 to be set to avoid disabling internal interrupt for modem event IRQ
+    irqs_to_enable_dio1 |= ( 1 << 28 );
     const uint8_t cbuffer[LR1121_MODEM_SYSTEM_SET_DIO_IRQ_PARAMS_CMD_LENGTH] = {
         ( uint8_t )( LR1121_MODEM_SYSTEM_SET_DIOIRQPARAMS_OC >> 8 ),
         ( uint8_t )( LR1121_MODEM_SYSTEM_SET_DIOIRQPARAMS_OC >> 0 ),
@@ -386,7 +412,7 @@ lr1121_modem_response_code_t lr1121_modem_system_cfg_lfclk( const void*         
     const uint8_t cbuffer[LR1121_MODEM_SYSTEM_CFG_LFCLK_CMD_LENGTH] = {
         ( uint8_t )( LR1121_MODEM_SYSTEM_CFG_LFCLK_OC >> 8 ),
         ( uint8_t )( LR1121_MODEM_SYSTEM_CFG_LFCLK_OC >> 0 ),
-        ( uint8_t )( lfclock_cfg | ( wait_for_32k_ready << 2 ) ),
+        ( uint8_t )( lfclock_cfg | ( wait_for_32k_ready ? 4 : 0 ) ),
     };
 
     return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write( context, cbuffer,
@@ -446,7 +472,7 @@ lr1121_modem_response_code_t lr1121_modem_system_get_temp( const void* context, 
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {
-        *temp = ( ( uint16_t ) rbuffer[0] << 8 ) + ( uint16_t ) rbuffer[1];
+        *temp = ( uint16_t ) ( ( rbuffer[0] << 8u ) + rbuffer[1] );
     }
 
     return status;
@@ -459,7 +485,7 @@ lr1121_modem_response_code_t lr1121_modem_system_set_sleep( const void*         
     const uint8_t cbuffer[LR1121_MODEM_SYSTEM_SET_SLEEP_CMD_LENGTH] = {
         ( uint8_t )( LR1121_MODEM_SYSTEM_SET_SLEEP_OC >> 8 ),
         ( uint8_t )( LR1121_MODEM_SYSTEM_SET_SLEEP_OC >> 0 ),
-        0x02u + sleep_cfg.is_warm_start,
+        ( uint8_t )( ( sleep_cfg.is_rtc_timeout << 1 ) + sleep_cfg.is_warm_start),
         ( uint8_t )( sleep_time >> 24 ),
         ( uint8_t )( sleep_time >> 16 ),
         ( uint8_t )( sleep_time >> 8 ),
@@ -537,7 +563,8 @@ lr1121_modem_response_code_t lr1121_modem_system_write_infopage( const void*    
     }
 
     return ( lr1121_modem_response_code_t ) lr1121_modem_hal_write(
-        context, cbuffer, LR1121_MODEM_SYSTEM_WRITE_INFOPAGE_CMD_LENGTH, cdata, length * sizeof( uint32_t ) );
+        context, cbuffer, LR1121_MODEM_SYSTEM_WRITE_INFOPAGE_CMD_LENGTH, cdata,
+        ( uint16_t ) ( length * sizeof( uint32_t ) ) );
 }
 
 lr1121_modem_response_code_t lr1121_modem_system_read_infopage( const void*                             context,
@@ -555,7 +582,8 @@ lr1121_modem_response_code_t lr1121_modem_system_read_infopage( const void*     
     };
 
     const lr1121_modem_response_code_t status = ( lr1121_modem_response_code_t ) lr1121_modem_hal_read(
-        context, cbuffer, LR1121_MODEM_SYSTEM_READ_INFOPAGE_CMD_LENGTH, ( uint8_t* ) data, length * sizeof( *data ) );
+        context, cbuffer, LR1121_MODEM_SYSTEM_READ_INFOPAGE_CMD_LENGTH, ( uint8_t* ) data,
+        ( uint16_t ) ( length * sizeof( *data ) ) );
 
     if( status == LR1121_MODEM_RESPONSE_CODE_OK )
     {

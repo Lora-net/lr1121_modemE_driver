@@ -4,6 +4,10 @@ This project proposes an implementation in C of the drivers for LR1121 Modem-E.
 
 It does not involve any state machine or high level API.
 
+## Firmware compatibility
+
+This driver is known to be compatible with firmware LR1121 Modem v2.0.2.
+
 ## Components
 
 The driver is split in several components:

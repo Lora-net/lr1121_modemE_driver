@@ -75,13 +75,27 @@ typedef enum
 /*!
  * @brief TX status values
  *
+ * These Tx statuses refer to the status of the complete LoRaWAN exchange, including uplink and downlink if any (for
+ * instance in a Tx/Rx1/Rx2 LoRaWAN class A sequence).
+ *
  * @see LR1121_MODEM_LORAWAN_EVENT_TX_DONE
  */
 typedef enum
 {
-    LR1121_MODEM_TX_NOT_SENT    = 0x00,
-    LR1121_MODEM_UNCONFIRMED_TX = 0x01,
-    LR1121_MODEM_CONFIRMED_TX   = 0x02,
+    LR1121_MODEM_TX_NOT_SENT =
+        0x00,  //!< The Tx failed, possible reasons are:
+               //!<  - payload is higher than maximal possible length (see @ref lr1121_modem_get_next_tx_max_payload)
+               //!<  - a network leave has been initiated before the uplink termination (see @ref
+               //!<  lr1121_modem_leave_network)
+               //!<  - duty-cycle (if applicable) forbids next Tx
+               //!<  - LBT (if applicable) detected activity and blocked the Tx
+               //!<  - the relay WOR ACK has not been received (if applicable)
+    LR1121_MODEM_UNCONFIRMED_TX =
+        0x01,  //!< The meaning of the status depends on the requested uplink:
+               //!<   - for unconfirmed uplink it means the exchange sequence has been executed
+               //!<   - for confirmed uplink, it means the exchange sequence has terminated without receiving
+               //!<   confirmation from network
+    LR1121_MODEM_CONFIRMED_TX = 0x02,  //!< The uplink has been confirmed by network
 } lr1121_modem_tx_done_event_t;
 
 /*!

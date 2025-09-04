@@ -154,6 +154,13 @@ lr1121_modem_helper_status_t lr1121_modem_helper_get_event_data( const void*    
                 ( lr1121_modem_regional_duty_cycle_status_t )( ( uint8_t )( event_fields.data >> 8 ) );
             break;
         }
+        case LR1121_MODEM_LORAWAN_EVENT_ALARM:
+        case LR1121_MODEM_LORAWAN_EVENT_JOINED:
+        case LR1121_MODEM_LORAWAN_EVENT_JOIN_FAIL:
+        case LR1121_MODEM_LORAWAN_EVENT_DOWN_DATA:
+        case LR1121_MODEM_LORAWAN_EVENT_NO_MORE_MULTICAST_SESSION_CLASS_C:
+        case LR1121_MODEM_LORAWAN_EVENT_NO_MORE_MULTICAST_SESSION_CLASS_B:
+        case LR1121_MODEM_LORAWAN_EVENT_ALC_SYNC_TIME:
         default:
             break;
         }
