@@ -1,7 +1,7 @@
-/**
- * @file      lr_fhss_v1_base_types.h
+/*!
+ * @file      modem_e_common.h
  *
- * @brief     Radio-independent LR-FHSS base type definitions, version 1
+ * @brief     modem driver common definition
  *
  * The Clear BSD License
  * Copyright Semtech Corporation 2026. All rights reserved.
@@ -32,16 +32,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef LR_FHSS_V1_BASE_TYPES_H__
-#define LR_FHSS_V1_BASE_TYPES_H__
+#ifndef MODEM_E_COMMON_H
+#define MODEM_E_COMMON_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * -----------------------------------------------------------------------------
  * --- DEPENDENCIES ------------------------------------------------------------
  */
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 /*
  * -----------------------------------------------------------------------------
@@ -58,70 +62,45 @@
  * --- PUBLIC TYPES ------------------------------------------------------------
  */
 
-/**
- * @brief LR-FHSS modulation type
+/*!
+ * @brief Command group identifier
  */
-typedef enum lr_fhss_v1_modulation_type_e
+typedef enum
 {
-    LR_FHSS_V1_MODULATION_TYPE_GMSK_488 = 0,
-} lr_fhss_v1_modulation_type_t;
+    MODEM_E_GROUP_ID_BSP     = 0x0600,  //!< Group ID for BSP commands
+    MODEM_E_GROUP_ID_MODEM   = 0x0601,  //!< Group ID for modem commands
+    MODEM_E_GROUP_ID_LORAWAN = 0x0602,  //!< Group ID for LoRaWAN commands
+    MODEM_E_GROUP_ID_RELAY   = 0x0603,  //!< Group ID for relay commands
+} modem_e_api_group_id_t;
 
-/**
- * @brief LR-FHSS coding rate
+/*!
+ * @brief Command return code (RC)
  */
-typedef enum lr_fhss_v1_cr_e
+typedef enum
 {
-    LR_FHSS_V1_CR_5_6 = 0x00,
-    LR_FHSS_V1_CR_2_3 = 0x01,
-    LR_FHSS_V1_CR_1_2 = 0x02,
-    LR_FHSS_V1_CR_1_3 = 0x03,
-} lr_fhss_v1_cr_t;
-
-/**
- * @brief LR-FHSS grid
- */
-typedef enum lr_fhss_v1_grid_e
-{
-    LR_FHSS_V1_GRID_25391_HZ = 0x00,
-    LR_FHSS_V1_GRID_3906_HZ  = 0x01,
-} lr_fhss_v1_grid_t;
-
-/**
- * @brief LR-FHSS bandwidth
- */
-typedef enum lr_fhss_v1_bw_e
-{
-    LR_FHSS_V1_BW_39063_HZ   = 0x00,
-    LR_FHSS_V1_BW_85938_HZ   = 0x01,
-    LR_FHSS_V1_BW_136719_HZ  = 0x02,
-    LR_FHSS_V1_BW_183594_HZ  = 0x03,
-    LR_FHSS_V1_BW_335938_HZ  = 0x04,
-    LR_FHSS_V1_BW_386719_HZ  = 0x05,
-    LR_FHSS_V1_BW_722656_HZ  = 0x06,
-    LR_FHSS_V1_BW_773438_HZ  = 0x07,
-    LR_FHSS_V1_BW_1523438_HZ = 0x08,
-    LR_FHSS_V1_BW_1574219_HZ = 0x09,
-} lr_fhss_v1_bw_t;
-
-/**
- * @brief LR-FHSS parameter structure
- */
-typedef struct lr_fhss_v1_params_s
-{
-    const uint8_t*               sync_word; /**< 4-byte sync word */
-    lr_fhss_v1_modulation_type_t modulation_type;
-    lr_fhss_v1_cr_t              cr;
-    lr_fhss_v1_grid_t            grid;
-    lr_fhss_v1_bw_t              bw;
-    bool                         enable_hopping;
-    uint8_t                      header_count; /**< Number of header blocks */
-} lr_fhss_v1_params_t;
+    MODEM_E_RESPONSE_CODE_OK              = 0x00,  //!< Driver command executed successfully
+    MODEM_E_RESPONSE_CODE_UNKOWN          = 0x01,  //!< Command code unknown
+    MODEM_E_RESPONSE_CODE_NOT_IMPLEMENTED = 0x02,  //!< Command not implemented
+    MODEM_E_RESPONSE_CODE_NOT_INITIALIZED = 0x03,  //!< Command not initialized
+    MODEM_E_RESPONSE_CODE_INVALID         = 0x04,  //!< Invalid command parameters
+    MODEM_E_RESPONSE_CODE_BUSY            = 0x05,  //!< Command cannot be executed now
+    MODEM_E_RESPONSE_CODE_FAIL            = 0x06,  //!< Command execution failed
+    MODEM_E_RESPONSE_CODE_BAD_CRC         = 0x08,  //!< CRC check failed
+    MODEM_E_RESPONSE_CODE_BAD_SIZE        = 0x0A,  //!< Size check failed
+    MODEM_E_RESPONSE_CODE_FRAME_ERROR     = 0x0F,  //!< SPI command checksum failed or CRC failed
+    MODEM_E_RESPONSE_CODE_NO_TIME         = 0x10,  //!< Modem time is not synchronized
+    MODEM_E_RESPONSE_CODE_NO_EVENT        = 0x12,  //!< No Event
+} modem_e_response_code_t;
 
 /*
  * -----------------------------------------------------------------------------
  * --- PUBLIC FUNCTIONS PROTOTYPES ---------------------------------------------
  */
 
-#endif  // LR_FHSS_V1_BASE_TYPES_H__
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // MODEM_E_COMMON_H
 
 /* --- EOF ------------------------------------------------------------------ */

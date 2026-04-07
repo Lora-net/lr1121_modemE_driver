@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-03-27
+
+### Added
+
+- `modem_e_connect_with_abp`
+- `modem_e_store_state_snapshot_to_nvm` and `modem_e_restore_state_snapshot_from_nvm`
+- `modem_e_set_user_dr_backoff_sequence_threshold`/`modem_e_get_user_dr_backoff_sequence_threshold`
+- `modem_e_connect_get_channel_mask` and `modem_e_connect_set_channel_mask`
+- Events `MODEM_E_LORAWAN_EVENT_DR_BACKOFF_LIMIT` and `MODEM_E_LORAWAN_EVENT_RESET_REQUEST`
+
+### Changed
+
+- Renaming for Modem-E v2.1 compliance, with support of LR1110/LR1121 Modem-E
+- Add one byte syncword argument to `modem_e_test_tx_lora`
+
+### Removed
+
+- `modem_e_regmem_write_mem8`/`modem_e_regmem_read_mem8` (formerly known as `lr1121_modem_regmem_write_mem8` and `lr1121_modem_regmem_read_mem8`)
+- Field `reset` from `modem_e_event_t` structure (formerly known as `lr11xx_modem_event_t`)
+
 ## [1.1.0] - 2025-07-02
 
 ### Added
