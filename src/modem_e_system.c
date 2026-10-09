@@ -58,7 +58,6 @@
  */
 
 #define MODEM_E_SYSTEM_GET_STATUS_AND_CLEAR_RESET_STATUS_CMD_LENGTH ( 2 )
-#define MODEM_E_SYSTEM_GET_IRQ_STATUS_CMD_LENGTH ( 2 )
 #define MODEM_E_SYSTEM_GET_VERSION_CMD_LENGTH ( 2 )
 #define MODEM_E_SYSTEM_GET_ERRORS_CMD_LENGTH ( 2 )
 #define MODEM_E_SYSTEM_CLEAR_ERRORS_CMD_LENGTH ( 2 )
@@ -88,7 +87,6 @@
 #define MODEM_E_SYSTEM_DRIVE_DIO_IN_SLEEP_MODE_CMD_LENGTH ( 3 )
 
 #define MODEM_E_SYSTEM_GET_STATUS_DIRECT_READ_LENGTH ( 6 )
-#define MODEM_E_SYSTEM_IRQ_STATUS_LENGTH ( 4 )
 
 /*
  * -----------------------------------------------------------------------------
@@ -110,7 +108,6 @@ enum
     MODEM_E_SYSTEM_SET_DIO_AS_RF_SWITCH_OC       = 0x0112,
     MODEM_E_SYSTEM_SET_DIOIRQPARAMS_OC           = 0x0113,
     MODEM_E_SYSTEM_CLEAR_IRQ_OC                  = 0x0114,
-    MODEM_E_SYSTEM_GET_IRQ_OC                    = 0x0115,
     MODEM_E_SYSTEM_CFG_LFCLK_OC                  = 0x0116,
     MODEM_E_SYSTEM_SET_TCXO_MODE_OC              = 0x0117,
     MODEM_E_SYSTEM_REBOOT_OC                     = 0x0118,
@@ -200,23 +197,7 @@ modem_e_response_code_t modem_e_system_get_status_and_clear_reset_source( const 
 
 modem_e_response_code_t modem_e_system_get_irq_status( const void* context, modem_e_system_irq_mask_t* irq_status )
 {
-    const uint8_t cbuffer[MODEM_E_SYSTEM_GET_IRQ_STATUS_CMD_LENGTH] = {
-        ( uint8_t ) ( MODEM_E_SYSTEM_GET_IRQ_OC >> 8 ),
-        ( uint8_t ) ( MODEM_E_SYSTEM_GET_IRQ_OC >> 0 ),
-    };
-    uint8_t rbuffer[MODEM_E_SYSTEM_IRQ_STATUS_LENGTH] = { 0x00 };
-
-    const modem_e_response_code_t status = ( modem_e_response_code_t ) modem_e_modem_hal_read(
-        context, cbuffer, MODEM_E_SYSTEM_GET_IRQ_STATUS_CMD_LENGTH, rbuffer, MODEM_E_SYSTEM_IRQ_STATUS_LENGTH );
-
-    if( status == MODEM_E_RESPONSE_CODE_OK )
-    {
-        *irq_status =
-            ( ( modem_e_system_irq_mask_t ) rbuffer[0] << 24 ) + ( ( modem_e_system_irq_mask_t ) rbuffer[1] << 16 ) +
-            ( ( modem_e_system_irq_mask_t ) rbuffer[2] << 8 ) + ( ( modem_e_system_irq_mask_t ) rbuffer[3] << 0 );
-    }
-
-    return status;
+    return modem_e_system_get_status_and_clear_reset_source(context, NULL, NULL, irq_status);
 }
 
 modem_e_response_code_t modem_e_system_get_version( const void* context, modem_e_system_version_t* version )

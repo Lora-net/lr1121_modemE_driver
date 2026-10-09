@@ -42,7 +42,7 @@ extern "C" {
 /**
  * @brief Version of the driver
  */
-#define MODEM_E_DRIVER_VERSION "v2.0.0"
+#define MODEM_E_DRIVER_VERSION "v2.1.1"
 
 /**
  * @brief Returns version string

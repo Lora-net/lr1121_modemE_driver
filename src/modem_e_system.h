@@ -112,10 +112,14 @@ modem_e_response_code_t modem_e_system_get_status_and_clear_reset_source( const 
 /*!
  * @brief Return irq_status
  *
+ * Helper function that internally calls @ref modem_e_system_get_status_and_clear_reset_source.
+ *
  * @param [in] context Chip implementation context
  * @param [out] irq_status irq_status status variable
  *
  * @returns Operation status
+ *
+ * @see modem_e_system_get_status_and_clear_reset_source
  */
 modem_e_response_code_t modem_e_system_get_irq_status( const void* context, modem_e_system_irq_mask_t* irq_status );
 

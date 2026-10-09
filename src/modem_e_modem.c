@@ -36,6 +36,8 @@
  * -----------------------------------------------------------------------------
  * --- DEPENDENCIES ------------------------------------------------------------
  */
+#include <stddef.h>
+
 #include "modem_e_modem.h"
 #include "modem_e_common.h"
 #include "modem_e_modem_hal.h"
@@ -348,9 +350,15 @@ modem_e_response_code_t modem_e_get_crashlog( const void* context, modem_e_crash
     {
         *status = ( modem_e_crashlog_status_t ) rbuffer[0];
 
-        for( uint8_t i = 0; i < MODEM_E_GET_CRASHLOG_RBUFFER_LENGTH - 1; i++ )
+        if( *status == MODEM_E_NEW_CRASHLOG )
         {
-            crashlog[i] = rbuffer[1 + i];
+            if( crashlog != NULL )
+            {
+                for( uint8_t i = 0; i < MODEM_E_GET_CRASHLOG_RBUFFER_LENGTH - 1; i++ )
+                {
+                    crashlog[i] = rbuffer[1 + i];
+                }
+            }
         }
     }
 

@@ -406,23 +406,24 @@ modem_e_response_code_t modem_e_radio_set_rx_and_lna_mode( const void* context, 
 }
 
 modem_e_response_code_t modem_e_radio_set_rx_with_timeout_in_rtc_step( const void*    context,
-                                                                       const uint32_t timeout_in_ms )
+                                                                       const uint32_t timeout_in_rtc_step )
 {
-    return modem_e_radio_set_rx_with_timeout_in_rtc_step_and_lna_mode( context, timeout_in_ms,
+    return modem_e_radio_set_rx_with_timeout_in_rtc_step_and_lna_mode( context, timeout_in_rtc_step,
                                                                        MODEM_E_RADIO_LNA_MODE_DIFFERENTIAL_LF0 );
 }
 
 modem_e_response_code_t modem_e_radio_set_rx_with_timeout_in_rtc_step_and_lna_mode( const void*              context,
-                                                                                    const uint32_t           timeout,
+                                                                                    const uint32_t           timeout_in_rtc_step,
                                                                                     modem_e_radio_lna_mode_t lna_mode )
 {
-    modem_e_response_code_t status                                   = MODEM_E_RESPONSE_CODE_NOT_INITIALIZED;
+    modem_e_response_code_t status; // Not initialised on purpose: it brings status to the function scope, and it will be
+                                    // initalized at the begining of do/while(0)
     const uint8_t           cbuffer[MODEM_E_RADIO_SET_RX_CMD_LENGTH] = {
                   ( uint8_t ) ( MODEM_E_RADIO_SET_RX_OC >> 8 ),
                   ( uint8_t ) ( MODEM_E_RADIO_SET_RX_OC >> 0 ),
-                  ( uint8_t ) ( timeout >> 16 ),
-                  ( uint8_t ) ( timeout >> 8 ),
-                  ( uint8_t ) ( timeout >> 0 ),
+                  ( uint8_t ) ( timeout_in_rtc_step >> 16 ),
+                  ( uint8_t ) ( timeout_in_rtc_step >> 8 ),
+                  ( uint8_t ) ( timeout_in_rtc_step >> 0 ),
     };
 
     do

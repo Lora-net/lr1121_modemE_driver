@@ -74,7 +74,11 @@
 modem_e_helper_status_t modem_e_helper_get_event_data( const void* context, modem_e_event_t* modem_event )
 {
     modem_e_helper_status_t status       = MODEM_E_HELPER_STATUS_ERROR;
-    modem_e_event_fields_t  event_fields = { 0 };
+    modem_e_event_fields_t  event_fields = {
+        .event_type = MODEM_E_LORAWAN_EVENT_RESET,
+        .missed_events_count = 0,
+        .data = 0,
+    };
 
     const modem_e_response_code_t modem_response_code = modem_e_get_event( context, &event_fields );
 
@@ -135,13 +139,13 @@ modem_e_helper_status_t modem_e_helper_get_event_data( const void* context, mode
         case MODEM_E_LORAWAN_EVENT_FUOTA_DONE:
         {
             modem_event->event_data.fuota_status.status =
-                ( modem_e_fuota_status_t ) ( event_fields.data >> 8 ) & 0x00FF;
+                ( modem_e_fuota_status_t ) ( ( event_fields.data >> 8 ) & 0x00FF );
             break;
         }
         case MODEM_E_LORAWAN_EVENT_TEST_MODE:
         {
             modem_event->event_data.test_mode_status.status =
-                ( modem_e_test_mode_status_t ) ( event_fields.data >> 8 ) & 0x00FF;
+                ( modem_e_test_mode_status_t ) ( ( event_fields.data >> 8 ) & 0x00FF );
             break;
         }
         case MODEM_E_LORAWAN_EVENT_REGIONAL_DUTY_CYCLE:
